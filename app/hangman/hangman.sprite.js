@@ -1,4 +1,4 @@
-const hangmanPics = [
+const hangmanFrames = [
   `
     ____
     |/   |

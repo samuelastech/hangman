@@ -8,14 +8,16 @@
 <body>
   <div id="hangman"></div>
 
-  <div id="form"></div>
+  <div id="textForm"></div>
   
-  <div id="game"></div>
+  <div id="letterForm"></div>
   
+  <script src="app/text/text.view.js"></script>
   <script src="app/text/text.model.js"></script>
 
-  <script src="app/game/game.sprite.js"></script>
-  <script src="app/game/game.view.js"></script>
+  <script src="app/hangman/hangman.sprite.js"></script>
+  <script src="app/hangman/hangman.view.js"></script>
+
   <script src="app/game/game.controller.js"></script>
   <script>
     const controller = new GameController();

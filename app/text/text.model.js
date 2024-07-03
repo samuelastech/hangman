@@ -3,7 +3,7 @@ class Text {
   #text;
 
   /** @type {Array<string>} */
-  #guessed = [];
+  #gaps = [];
 
   /** @type {Array<string>} */
   #triedLetters = [];
@@ -15,13 +15,13 @@ class Text {
   constructor(text) {
     this.#text = text.toUpperCase().split('');
     for(let i = 0; i < this.#text.length; i++) {
-      if (this.text[i] === ' ') this.#guessed[i] = ' ';
-      else this.#guessed[i] = null;
+      if (this.text[i] === ' ') this.#gaps[i] = ' ';
+      else this.#gaps[i] = null;
     }
   }
 
   get hasWon() {
-    return JSON.stringify(this.#guessed) === JSON.stringify(this.#text);
+    return JSON.stringify(this.#gaps) === JSON.stringify(this.#text);
   }
 
   get hasLost() {
@@ -32,8 +32,8 @@ class Text {
     return this.#text;
   }
 
-  get guessed() {
-    return this.#guessed;
+  get gaps() {
+    return this.#gaps;
   }
 
   set triedLetter(letter) {
@@ -53,7 +53,7 @@ class Text {
       let i = this.#text.indexOf(letter, fromIndex);
       fromIndex = i + 1;
       if (i !== -1) {
-        this.#guessed[i] = letter;
+        this.#gaps[i] = letter;
         lettersCount++;
       } else {
         checkIsOver = true;

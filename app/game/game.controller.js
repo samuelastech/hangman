@@ -1,18 +1,24 @@
 class GameController {
   #textInput;
-  #guessInput;
+  #letterInput;
 
-  #gameView;
+  #hangmanView;
+  #textView;
   #textModel;
 
   constructor() {
-    this.#gameView = new GameView({
-      guessElement: document.querySelector('#game'),
-      hangmanElement: document.querySelector('#hangman'),
-      formElement: document.querySelector('#form'),
-    });
+    this.#loadViews();
     this.#textInput = document.querySelector('#text');
-    this.#gameView.updateHangman();
+  }
+
+  #loadViews() {
+    this.#hangmanView = new HangmanView({
+      hangmanDiv: document.querySelector('#hangman'),
+    });
+    this.#textView = new TextView({
+      letterForm: document.querySelector('#letterForm'),
+      textForm: document.querySelector('#textForm'),
+    });
   }
 
   /**
@@ -22,40 +28,40 @@ class GameController {
   start(event) {
     event.preventDefault();
     this.#textModel = new Text(this.#textInput.value);
-    this.#gameView.unmountTextForm();
-    this.#gameView.initialRender(this.#textModel);
-    this.#guessInput = document.querySelector('#guess');
+    this.#textView.unmountTextForm();
+    this.#textView.renderLetterForm(this.#textModel);
+    this.#letterInput = document.querySelector('#letterInput');
   }
 
   guess(event) {
     event.preventDefault();
-    const letter = this.#guessInput.value;
+    const letter = this.#letterInput.value;
     if(this.#textModel.triedLettersIncludes(letter)) {
       alert('Você já tentou essa letra');
     } else {
       this.#textModel.triedLetter = letter;
       const hasLetter = this.#textModel.hasLetter(letter);
       if(hasLetter) {
-        this.#gameView.updateGuessed(this.#textModel);
+        this.#textView.renderGaps(this.#textModel);
         const hasWon = this.#textModel.hasWon;
         if (hasWon) {
           alert('Você ganhou o game');
-          this.#gameView.textFormRender();
-          this.#gameView.unmountGame();
+          this.#textView.renderTextForm();
+          this.#textView.unmountGame();
         } else {
-          this.#guessInput.value = '';
-          this.#guessInput.focus();
-          console.log(this.#guessInput.value)
+          this.#letterInput.value = '';
+          this.#letterInput.focus();
         }
       } else {
-        this.#gameView.updateHangman(this.#textModel);
-        const hasLost = this.#gameView.hasLost;
-        this.#guessInput.value = '';
-        this.#guessInput.focus();
+        this.#hangmanView.nextFrame();
+        const hasLost = this.#hangmanView.isLastFrame;
+        this.#letterInput.value = '';
+        this.#letterInput.focus();
         if (hasLost) {
           alert('Você perdeu o game');
-          this.#gameView.unmountGame();
-          this.#gameView.textFormRender();
+          this.#hangmanView.reset();
+          this.#textView.unmountGame();
+          this.#textView.renderTextForm();
         }
       }
     }
